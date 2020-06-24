@@ -41,6 +41,7 @@ import { FileChooser } from './FileChooser';
 import { ConsoleMessage, ConsoleMessageType } from './ConsoleMessage';
 import { PuppeteerLifeCycleEvent } from './LifecycleWatcher';
 import Protocol from '../protocol';
+import { EvaluateFn, SerializableOrJSHandle } from './EvalTypes';
 
 const writeFileAsync = helper.promisify(fs.writeFile);
 
@@ -513,16 +514,16 @@ export class Page extends EventEmitter {
 
   async $eval<ReturnType extends any>(
     selector: string,
-    pageFunction: Function | string,
-    ...args: unknown[]
+    pageFunction: EvaluateFn | string,
+    ...args: SerializableOrJSHandle[]
   ): Promise<ReturnType> {
     return this.mainFrame().$eval<ReturnType>(selector, pageFunction, ...args);
   }
 
   async $$eval<ReturnType extends any>(
     selector: string,
-    pageFunction: Function | string,
-    ...args: unknown[]
+    pageFunction: EvaluateFn | string,
+    ...args: SerializableOrJSHandle[]
   ): Promise<ReturnType> {
     return this.mainFrame().$$eval<ReturnType>(selector, pageFunction, ...args);
   }
