@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-import { initializePuppeteer } from './initialize';
+import { initializePuppeteer, InitOptions } from './initialize';
 import * as path from 'path';
+import readPkgUp from 'read-pkg-up';
+
+const packageJsonResult = readPkgUp.sync();
+const packageJson = packageJsonResult.packageJson as unknown;
 
 const puppeteer = initializePuppeteer({
-  packageJson: require(path.join(__dirname, '..', 'package.json')),
+  packageJson: packageJson as InitOptions['packageJson'],
   rootDirectory: path.join(__dirname, '..'),
 });
 
-/*
- * Has to be CJS here rather than ESM such that the output file ends with
- * module.exports = puppeteer.
- *
- * If this was export default puppeteer the output would be:
- * exports.default = puppeteer
- * And therefore consuming via require('puppeteer') would break / require the user
- * to access require('puppeteer').default;
- */
-export = puppeteer;
+export default puppeteer;
